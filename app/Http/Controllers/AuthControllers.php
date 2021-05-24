@@ -17,7 +17,7 @@ class AuthControllers extends Controller
     {
         $fields = $request->validated();
 
-        $fields['status'] = isset($fields['status']) ? $fields['status'] : 'inactive';
+        $fields['status'] = isset($fields['status']) ? $fields['status'] : 'active';
         $fields['user_type'] = isset($fields['user_type']) ? $fields['user_type'] : 'thirdparty';
         $getuser = Member::where('email', $fields['email'])->first();
         $user = Member::create([
@@ -42,7 +42,7 @@ class AuthControllers extends Controller
             'token' => $token
         ];
 
-        return response($response, 201);
+        return response()->json($response, 201);
     }
 
     public function login(LoginStoreRequest  $request)
@@ -53,11 +53,11 @@ class AuthControllers extends Controller
         // dd($fields);
         if ($fields['user_type'] !== 'thirdparty' && $fields['user_type'] !== 'other') {
 
-            $fields['status'] = isset($fields['status']) ? $fields['status'] : 'inactive';
+            $fields['status'] = isset($fields['status']) ? $fields['status'] : 'active';
             $fields['user_type'] = isset($fields['user_type']) ? $fields['user_type'] : 'thirdparty';
 
             if (!$user) {
-
+                // dd($fields['id_sso']);
                 $string = $this->rand_Pass();
                 $pass   = strtoupper(md5(str_replace(" ", "", $string)));
                 $addUser = Member::create([
@@ -83,14 +83,14 @@ class AuthControllers extends Controller
                 ];
                 $detailss = ['password' => $pass];
                 Mail::to($fields['email'])->send(new MySendPasswordMail($detailss));
-                return  response($response, 201);
+                return  response()->json($response, 200);
             } else {
                 $token = $user->createToken('myapptoken')->plainTextToken;
 
                 if (!Hash::check($fields['password'], $user->password)) {
-                    return response(['message' => 'Password is incorrect'], 401);
+                    return  response()->json(['message' => 'Password is incorrect'], 401);
                 } else if ($user->status === 'inactive') {
-                    return response(['message' => 'Your account is inactive'], 401);
+                    return  response()->json(['message' => 'Your account is inactive'], 401);
                 } else {
 
 
@@ -99,16 +99,16 @@ class AuthControllers extends Controller
                         'token' => $token
                     ];
 
-                    return response($response, 201);
+                    return response()->json($response, 200);
                 }
             }
         } else {
             if (!$user) {
-                return response(['message' => 'Email Address is not registered.'], 401);
+                return response()->json(['message' => 'Email Address is not registered.'], 401);
             } else  if (!Hash::check($fields['password'], $user->password)) {
-                return response(['message' => 'Password is incorrect'], 401);
+                return  response()->json(['message' => 'Password is incorrect'], 401);
             } else if ($user->status === 'inactive') {
-                return response(['message' => 'Your account is inactive'], 401);
+                return  response()->json(['message' => 'Your account is inactive'], 401);
             } else {
                 $token = $user->createToken('myapptoken')->plainTextToken;
 
@@ -117,7 +117,7 @@ class AuthControllers extends Controller
                     'token' => $token
                 ];
 
-                return response($response, 201);
+                return  response()->json($response, 200);
             }
         }
     }

@@ -26,7 +26,7 @@ class Member extends Authenticatable
         'password',
         'position',
         'status',
-        'status',
+        'id_sso',
         'user_type',
         'picture',
         'phone',

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class MemberStoreRequest extends FormRequest
+class MemberUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,25 +28,19 @@ class MemberStoreRequest extends FormRequest
             'firstname' => 'required|string|max:100',
             'lastname' => 'string|max:100|nullable',
             'name' => 'string|max:100|nullable',
-            'email' => 'required|string|unique:members,email',
-            'password' => 'required|string|confirmed',
-            'status' => 'string|max:10|nullable',
             'position' => 'string|max:30|nullable',
-            'user_type' => 'string|max:30|nullable',
             'picture' => 'string|nullable',
             'phone' => 'max:15|numeric|nullable',
             'birthday' => 'numeric|nullable',
             'gender' => 'integer|nullable',
         ];
     }
-
     public function messages()
     {
         return [
             'email.required' => 'Email is required!',
             'email.unique' => 'Email is already register!',
-            'firstname.required' => 'Firstname is required!',
-            'password.required' => 'Password is required!'
+            'firstname.required' => 'Firstname is required!'
         ];
     }
 }
