@@ -61,7 +61,11 @@ class MemberController extends Controller
             'birthday' => isset($fields['birthday']) ? $fields['birthday'] : null,
             'gender' => isset($fields['gender']) ? $fields['gender'] : null,
         ]);
-        return $member;
+
+        $response = ['message' => 'Data successfully updated'];
+        return  response()->json($response, 200);
+
+        // return $member;
     }
 
     public function changePassword(ChangePasswordStoreRequest $request, $id)
@@ -73,6 +77,9 @@ class MemberController extends Controller
         $member->update([
             'password' => bcrypt($fields['passwordnew']),
         ]);
-        return $member;
+        $response = ['message' => 'Ypur Password successfully updated'];
+        return  response()->json($response, 200);
+
+        // return $member;
     }
 }
